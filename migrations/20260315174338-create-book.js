@@ -45,11 +45,41 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      author_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Authors",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
       publisher_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: "Publishers",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+      category_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Categories",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+      genre_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Genres",
           key: "id",
         },
         onDelete: "CASCADE",
@@ -61,7 +91,7 @@ module.exports = {
       },
       inventory: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false,

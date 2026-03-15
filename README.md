@@ -67,15 +67,15 @@ registration
 
 
 users
+genres
+categories
+authors
+publishers
+preferences
 books
 loans
 returns
-preferences
 book_views
 book_ratings
 book_reviews
 favorites
-categories
-genres
-authors
-publishers

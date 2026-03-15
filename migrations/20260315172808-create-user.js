@@ -10,22 +10,33 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       birth: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       type: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       registration: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+      },
+      photo: {
+        type: Sequelize.STRING,
+      },
+      banner: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

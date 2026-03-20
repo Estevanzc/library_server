@@ -12,13 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         notEmpty: true,
         len: {
           args: [1, 100],
           msg: "Name must have length between 1 and 100"
         }
-      }
+      },
     }
   }, {
     sequelize,

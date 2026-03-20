@@ -15,7 +15,8 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true,
       },
       password: {
         type: Sequelize.STRING,
@@ -31,6 +32,15 @@ module.exports = {
       },
       registration: {
         type: Sequelize.STRING,
+        unique: true,
+      },
+      resetPasswordToken: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      resetPasswordExpires: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       photo: {
         type: Sequelize.STRING,

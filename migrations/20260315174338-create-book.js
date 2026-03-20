@@ -12,7 +12,6 @@ module.exports = {
       title: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true
       },
       subtitle: {
         type: Sequelize.STRING,
@@ -27,7 +26,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Leanguage",
+          model: "Leanguages",
           key: "id",
         },
         onDelete: "CASCADE",

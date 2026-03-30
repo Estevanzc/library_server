@@ -6,7 +6,7 @@ module.exports = {
       {
         book_id: 1,
         user_id: 1,
-        devolution_date: "2026-04-10",
+        devolution_date: new Date("2026-04-10"),
         renews: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -14,7 +14,7 @@ module.exports = {
       {
         book_id: 2,
         user_id: 1,
-        devolution_date: "2026-03-30",
+        devolution_date: new Date("2026-03-30"),
         renews: 2,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -22,7 +22,7 @@ module.exports = {
       {
         book_id: 3,
         user_id: 1,
-        devolution_date: "2026-04-10",
+        devolution_date: new Date("2026-04-10"),
         renews: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -30,7 +30,7 @@ module.exports = {
       {
         book_id: 1,
         user_id: 4,
-        devolution_date: "2026-04-10",
+        devolution_date: new Date("2026-04-10"),
         renews: 0,
         createdAt: new Date(),
         updatedAt: new Date(),

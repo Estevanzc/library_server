@@ -16,7 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
+// app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 app.use('/', routes);
 
 if (process.env.NODE_ENV === 'test') {

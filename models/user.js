@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Book_review, {foreignKey: "user_id", as: "reviews"})
       User.hasMany(models.Favorite, {foreignKey: "user_id", as: "favorites"})
       User.hasMany(models.Loan, {foreignKey: "user_id", as: "loans"})
-      User.hasMany(models.Return, {foreignKey: "user_id", as: "returns"})
     }
   }
   User.init({

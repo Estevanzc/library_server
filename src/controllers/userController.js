@@ -16,53 +16,19 @@ const { Op } = require("sequelize")
 
 module.exports = {
   async profile(req, res, next) {
-    try {
-      let { id } = req.params
-      let user = await User.findByPk(id, {
-        attributes: {
-          include: [
-            [Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('members.posts.id'))), 'postCount'],
-            [Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('members.blog.id'))), 'blogCount'],
-            [Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('followers.id'))), 'followerCount']
-          ],
-          exclude: ['password'],
-        },
-        include: [
-          {
-            model: Member,
-            as: 'members',
-            attributes: [],
-            include: [
-              {
-                model: Post,
-                as: 'posts',
-                attributes: []
-              },
-              {
-                model: Blog,
-                as: 'blog',
-                attributes: []
-              }
-            ]
-          },
-          { model: Follower, as: 'followers', attributes: [] }
-        ],
-        group: ['User.id']
-      });
-
-      if (!user) {
-        return res.status(404).json({ error: "User not found" })
-      }
-      return res.json(user)
-    } catch (err) {
-      next(err)
-    }
   },
   async register(req, res, next) {
     try {
-      const { name, email, password, password_confirmation, birth, occupation } = req.body;
+      const { name, email, password, password_confirmation, birth, type, registration } = req.body;
 
-      const userExists = await User.findOne({ where: { email } });
+      const userExists = await User.findOne({
+        where: {
+          [Op.or]: [
+            { email: email },
+            { registration: registration }
+          ]
+        }
+      });
       if (userExists) {
         return res.status(400).json({ error: 'User already exists' });
       }
@@ -71,9 +37,6 @@ module.exports = {
           error: "Password and its confirmation doesn't match"
         })
       }
-      const [user_occupation] = await Occupation.findOrCreate({
-        where: { name: occupation }
-      });
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const user = await User.create({
@@ -81,7 +44,8 @@ module.exports = {
         email,
         password: hashedPassword,
         birth,
-        occupation_id: user_occupation.id
+        registration,
+        type,
       });
 
       return res.status(201).json({
@@ -126,21 +90,16 @@ module.exports = {
   },
   async update(req, res, next) {
     try {
-      let { id, name, email, birth, description, occupation } = req.body
+      let { id, name, email, birth } = req.body
       let user = await User.findByPk(id);
       if (!user) {
         return res.status(404).json({ error: "User not found" })
       }
-      const [user_occupation] = await Occupation.findOrCreate({
-        where: { name: occupation }
-      });
       if (req.user.id == id) {
         await user.update({
           name,
           email,
           birth,
-          description,
-          occupation_id: user_occupation.id
         });
         return res.status(202).json({
           message: "Profile data updated successfully"
@@ -191,7 +150,7 @@ module.exports = {
     try {
       const { id } = req.params;
       const user = await User.findByPk(id);
-      if (req.user.id == id || req.user.admin) {
+      if (req.user.id == id || req.user.type == 2) {
         if (user.photo) {
           const photoPath = path.resolve(
             __dirname,
@@ -224,21 +183,6 @@ module.exports = {
         return res.status(204).send();
       }
       return res.status(403).json({ error: 'Access denied' });
-    } catch (err) {
-      next(err);
-    }
-  },
-  async dark_mode(req, res, next) {
-    try {
-      const user = await User.findByPk(req.user.id);
-      const newDarkMode = !user.dark_mode;
-      await user.update({
-        dark_mode: newDarkMode
-      });
-      return res.status(200).json({
-        message: `Color mode set to ${newDarkMode ? "dark" : "light"}`,
-        dark_mode: newDarkMode
-      });
     } catch (err) {
       next(err);
     }

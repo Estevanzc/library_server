@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
         len: {
           args: [3, 100],
-          msg: "Name must have length between 1 and 100"
+          msg: "Name must have length between 3 and 100"
         }
       }
     },
@@ -42,8 +42,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         hasMinLength(value) {
-          if (value.length < 3) {
-            throw new Error("Password must be at least 3 characters long");
+          if (value.length < 6) {
+            throw new Error("Password must be at least 6 characters long");
           }
         },
         hasNumber(value) {

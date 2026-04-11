@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     type: {
       type: DataTypes.INTEGER,
-      defaultValue: 0,
+      defaultValue: 0,//0 => student, 1 => teacher, 2 => adm
     },
     registration: {
       type: DataTypes.STRING,

@@ -151,34 +151,8 @@ module.exports = {
       const { id } = req.params;
       const user = await User.findByPk(id);
       if (req.user.id == id || req.user.type == 2) {
-        if (user.photo) {
-          const photoPath = path.resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            user.photo.replace('/', '')
-          );
-
-          try {
-            await fs.unlink(photoPath);
-          } catch (err) {
-          }
-        }
-        if (user.banner) {
-          const bannerPath = path.resolve(
-            __dirname,
-            '..',
-            '..',
-            '..',
-            user.banner.replace('/', '')
-          );
-
-          try {
-            await fs.unlink(bannerPath);
-          } catch (err) {
-          }
-        }
+        await controller.destroyImage({model: user, field: "photo"})
+        await controller.destroyImage({model: user, field: "banner"})
         await user.destroy();
         return res.status(204).send();
       }

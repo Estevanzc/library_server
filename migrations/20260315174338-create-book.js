@@ -86,7 +86,6 @@ module.exports = {
       },
       cover: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       inventory: {
         type: Sequelize.INTEGER,

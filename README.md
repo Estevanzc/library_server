@@ -58,24 +58,8 @@ $env:NODE_ENV="test"
 
 
 
-name
-email
-password
-birth
-type
-registration
-
-
-users
-genres
-categories
-authors
-publishers
-preferences
-books
-loans
-returns
-book_views
-book_ratings
-book_reviews
-favorites
+books => {
+    store: adm
+    update: adm
+    delete: adm
+}

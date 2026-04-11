@@ -23,7 +23,7 @@ module.exports = {
             [field]: `/uploads/${file.filename}`
         });
     },
-    async saveImage({file, oldPath = null}) {
+    async saveImage({ file, oldPath = null }) {
         if (!file) {
             throw new Error('No file provided')
         }
@@ -39,4 +39,20 @@ module.exports = {
         }
         return `/uploads/${file.filename}`
     },
+    async destroyImage({model, field}) {
+        if (model[field]) {
+            const filePath = path.resolve(
+                __dirname,
+                '..',
+                '..',
+                '..',
+                model[field].replace('/', '')
+            );
+
+            try {
+                await fs.unlink(filePath);
+            } catch (err) {
+            }
+        }
+    }
 };

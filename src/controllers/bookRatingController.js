@@ -11,7 +11,6 @@ const controller = require('../controllers/controller');
 const JWT_SECRET = process.env.JWT_SECRET;
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-// const { emailPage } = require('../utils/emailPage');
 const { Op } = require("sequelize")
 
 module.exports = {
@@ -44,21 +43,6 @@ module.exports = {
       })
       return res.status(202).json({
         message: "Book rating successfully updated"
-      })
-    } catch (err) {
-      next(err)
-    }
-  },
-  async destroy(req, res, next) {
-    try {
-      let { id } = req.query
-      let book_rating = await Book_rating.findByPk(id)
-      if (!book_rating) {
-        return res.status(404).json({ error: "Book rating not found" })
-      }
-      await book_rating.destroy()
-      return res.status(202).json({
-        message: "Book rating successfully deleted"
       })
     } catch (err) {
       next(err)

@@ -1,4 +1,4 @@
-const { Author, Book_rating, Book_rating, Book_view, Book, Category, Favorite, Genre, Leanguage, Loan, Preference, Publisher, User } = require('../../models');
+const { Author, Book_rating, Book_review, Book_view, Book, Category, Favorite, Genre, Leanguage, Loan, Preference, Publisher, User } = require('../../models');
 const bcrypt = require('bcryptjs');
 const { Sequelize, where } = require('sequelize');
 const jwt = require('jsonwebtoken');

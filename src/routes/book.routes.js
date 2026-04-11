@@ -15,7 +15,6 @@ router.delete('/destroy', authMiddleware, adminMiddleware, bookController.destro
 
 router.post('/rating/store', authMiddleware, bookRatingController.store);
 router.put('/rating/update', authMiddleware, bookRatingController.update);
-router.delete('/rating/destroy', authMiddleware, bookRatingController.destroy);
 
 router.post('/review/store', authMiddleware, bookReviewController.store);
 router.put('/review/update', authMiddleware, bookReviewController.update);

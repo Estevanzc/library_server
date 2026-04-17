@@ -1,15 +1,16 @@
 const express = require('express');
 const authMiddleware = require('../middlewares/authMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
-// const insertMiddleware = require('../middlewares/data_validation/users/insertMiddleware');
+const insertMiddleware = require('../middlewares/data_validation/books/insertMiddleware');
+const updateMiddleware = require('../middlewares/data_validation/books/updateMiddleware');
 const optionalAuthMiddleware = require('../middlewares/optionalAuthMiddleware');
 const upload = require('../middlewares/upload');
 const {bookController, bookReviewController, bookRatingController} = require('../controllers/');
 
 const router = express.Router();
 
-router.post('/store', authMiddleware, adminMiddleware, bookController.store);
-router.put('/update', authMiddleware, adminMiddleware, bookController.update);
+router.post('/store', authMiddleware, adminMiddleware, insertMiddleware, bookController.store);
+router.put('/update', authMiddleware, adminMiddleware, updateMiddleware, bookController.update);
 router.put('/update/cover', authMiddleware, adminMiddleware, bookController.updateCover);
 router.delete('/destroy', authMiddleware, adminMiddleware, bookController.destroy);
 

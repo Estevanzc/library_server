@@ -55,9 +55,6 @@ module.exports = {
     try {
       let { id, title, subtitle, isbn, leanguage, sinopsis, pages, publication_year, author, publisher, category, genre, inventory } = req.body
       let book = await Book.findByPk(id)
-      if (!book) {
-        return res.status(404).json({ error: "Book not found" })
-      }
       let [book_leanguage] = await Leanguage.findOrCreate({
         where: { name: leanguage }
       })
@@ -122,6 +119,15 @@ module.exports = {
       let book = await Book.findByPk(id)
       if (!book) {
         return res.status(404).json({ error: "Book not found" })
+      }
+      let loan = await Loan.findOne({
+        where: {
+          active: true,
+          book_id: book.id
+        }
+      })
+      if (loan) {
+        return res.status(409).json({error: "Unable to delete book because there is a active loan related to it"})
       }
       await controller.destroyImage({ model: book, field: "cover" })
       await book.destroy()

@@ -21,6 +21,9 @@ module.exports = {
       if (!book) {
         return res.status(404).json({ error: "Book not found" })
       }
+      if (content.length <= 5) {
+        return res.status(400).json({ error: "Review length must be at least 5 characters long" })
+      }
       let book_review = await Book_review.create({
         book_id: book.id,
         user_id: req.user.id,
@@ -38,6 +41,12 @@ module.exports = {
       if (!book_review) {
         return res.status(404).json({ error: "Book Review not found" })
       }
+      if (book_review.user_id != req.user.id) {
+        return res.status(403).json({ error: 'Access denied' });
+      }
+      if (content.length <= 5) {
+        return res.status(400).json({ error: "Review length must be at least 5 characters long" })
+      }
       await book_review.update({
         content
       })
@@ -54,6 +63,9 @@ module.exports = {
       let book_review = await Book_review.findByPk(id)
       if (!book_review) {
         return res.status(404).json({ error: "Book Review not found" })
+      }
+      if (book_review.user_id != req.user.id && req.user.type != 2) {
+        return res.status(403).json({ error: 'Access denied' });
       }
       await book_review.destroy()
       return res.status(202).json({

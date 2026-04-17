@@ -21,6 +21,9 @@ module.exports = {
       if (!book) {
         return res.status(404).json({ error: "Book not found" })
       }
+      if (!Number(rating) || rating < 0 || rating > 10) {
+        return res.status(400).json({ error: "Rating num must be between 0 and 10" })
+      }
       let book_rating = await Book_rating.create({
         book_id: book.id,
         user_id: req.user.id,
@@ -37,6 +40,12 @@ module.exports = {
       let book_rating = await Book_rating.findByPk(id)
       if (!book_rating) {
         return res.status(404).json({ error: "Book rating not found" })
+      }
+      if (book_rating.user_id != req.user.id) {
+        return res.status(403).json({ error: 'Access denied' });
+      }
+      if (!Number(rating) || rating < 0 || rating > 10) {
+        return res.status(400).json({ error: "Rating num must be between 0 and 10" })
       }
       await book_rating.update({
         rating

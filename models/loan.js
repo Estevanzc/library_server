@@ -18,13 +18,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    devolution_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
     renews: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+    },
+    active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     }
   }, {
     sequelize,

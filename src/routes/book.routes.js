@@ -20,10 +20,5 @@ router.put('/rating/update', authMiddleware, bookRatingController.update);
 router.post('/review/store', authMiddleware, bookReviewController.store);
 router.put('/review/update', authMiddleware, bookReviewController.update);
 router.delete('/review/destroy', authMiddleware, bookReviewController.destroy);
-// router.get('/requests/:id', authMiddleware, memberRequestController.user_requests);password_recover
-// router.get('/searches', optionalAuthMiddleware, searchController.user_searches);
-// router.post('/login', bookController.login);
-// router.put('/update/banner', authMiddleware, upload.single("banner"), bookController.updateBanner);
-// router.delete('/:id', authMiddleware, bookController.destroy);
 
 module.exports = router;

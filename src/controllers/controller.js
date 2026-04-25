@@ -39,7 +39,7 @@ module.exports = {
         }
         return `/uploads/${file.filename}`
     },
-    async destroyImage({model, field}) {
+    async destroyImage({ model, field }) {
         if (model[field]) {
             const filePath = path.resolve(
                 __dirname,

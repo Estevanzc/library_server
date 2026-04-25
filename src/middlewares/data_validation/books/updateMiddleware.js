@@ -1,4 +1,4 @@
-import Book from "../../../../models";
+const Book = require("../../../../models");
 
 module.exports = async (req, res, next) => {
     let { id, title, subtitle, isbn, leanguage, sinopsis, pages, publication_year, author, publisher, category, genre, inventory } = req.body;

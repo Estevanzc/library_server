@@ -127,7 +127,7 @@ module.exports = {
         }
       })
       if (loan) {
-        return res.status(409).json({error: "Unable to delete book because there is a active loan related to it"})
+        return res.status(409).json({ error: "Unable to delete book because there is an active loan related to it" })
       }
       await controller.destroyImage({ model: book, field: "cover" })
       await book.destroy()

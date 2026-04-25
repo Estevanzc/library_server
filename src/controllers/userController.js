@@ -150,9 +150,21 @@ module.exports = {
     try {
       const { id } = req.params;
       const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).json({error: "User not found"})
+      }
+      let loan = await Loan.findOne({
+        where: {
+          active: true,
+          user_id: id
+        }
+      })
+      if (loan) {
+        return res.status(409).json({error: "Can't delete user because it is related to an active loan"})
+      }
       if (req.user.id == id || req.user.type == 2) {
-        await controller.destroyImage({model: user, field: "photo"})
-        await controller.destroyImage({model: user, field: "banner"})
+        await controller.destroyImage({ model: user, field: "photo" })
+        await controller.destroyImage({ model: user, field: "banner" })
         await user.destroy();
         return res.status(204).send();
       }

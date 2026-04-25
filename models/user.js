@@ -5,12 +5,12 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      User.hasMany(models.Preference, {foreignKey: "user_id", as: "preferences"})
-      User.hasMany(models.Book_view, {foreignKey: "user_id", as: "views"})
-      User.hasMany(models.Book_rating, {foreignKey: "user_id", as: "ratings"})
-      User.hasMany(models.Book_review, {foreignKey: "user_id", as: "reviews"})
-      User.hasMany(models.Favorite, {foreignKey: "user_id", as: "favorites"})
-      User.hasMany(models.Loan, {foreignKey: "user_id", as: "loans"})
+      User.hasMany(models.Preference, { foreignKey: "user_id", as: "preferences" })
+      User.hasMany(models.Book_view, { foreignKey: "user_id", as: "views" })
+      User.hasMany(models.Book_rating, { foreignKey: "user_id", as: "ratings" })
+      User.hasMany(models.Book_review, { foreignKey: "user_id", as: "reviews" })
+      User.hasMany(models.Favorite, { foreignKey: "user_id", as: "favorites" })
+      User.hasMany(models.Loan, { foreignKey: "user_id", as: "loans" })
     }
   }
   User.init({
@@ -89,6 +89,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     banner: {
       type: DataTypes.STRING,
+    },
+    suspension_date: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   }, {
     sequelize,

@@ -5,7 +5,7 @@ const insertMiddleware = require('../middlewares/data_validation/books/insertMid
 const updateMiddleware = require('../middlewares/data_validation/books/updateMiddleware');
 const optionalAuthMiddleware = require('../middlewares/optionalAuthMiddleware');
 const upload = require('../middlewares/upload');
-const {bookController, bookReviewController, bookRatingController} = require('../controllers/');
+const {bookController, bookReviewController, bookRatingController, preferenceController, favoriteController} = require('../controllers/');
 
 const router = express.Router();
 
@@ -19,6 +19,12 @@ router.put('/rating/update', authMiddleware, bookRatingController.update);
 
 router.post('/review/store', authMiddleware, bookReviewController.store);
 router.put('/review/update', authMiddleware, bookReviewController.update);
-router.delete('/review/destroy', authMiddleware, bookReviewController.destroy);
+router.delete('/review/destroy/:id', authMiddleware, bookReviewController.destroy);
+
+router.post('/preferences/store', authMiddleware, preferenceController.store);
+router.delete('/preferences/destroy/:id', authMiddleware, preferenceController.destroy);
+
+router.post('/favorites/store', authMiddleware, favoriteController.store);
+router.delete('/favorites/destroy/:id', authMiddleware, favoriteController.destroy);
 
 module.exports = router;

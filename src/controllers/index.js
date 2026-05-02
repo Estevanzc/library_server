@@ -4,4 +4,6 @@ module.exports = {
     bookReviewController: require('./bookReviewController'),
     bookRatingController: require('./bookRatingController'),
     loanController: require('./loanController'),
+    favoriteController: require('./favoriteController'),
+    preferenceController: require('./preferenceController'),
 };

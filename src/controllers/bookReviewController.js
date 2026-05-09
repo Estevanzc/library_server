@@ -15,10 +15,84 @@ const { Op } = require("sequelize")
 const { getPagination, getMonthWindow } = require('../utils/queryHelper');
 
 module.exports = {
-  /*
-  by book
-  by user
-  */
+  async getReviewsByBook(req, res, next) {
+    try {
+      const { limit, offset } = getPagination(req.query);
+      const { id } = req.params;
+
+      const reviews = await Book_review.findAll({
+        where: { book_id: id },
+        limit,
+        offset,
+        order: [['createdAt', 'DESC']],
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name", "email", "photo"],
+          }
+        ],
+      });
+
+      if (!reviews || reviews.length === 0) {
+        return res.status(404).json({ message: "No reviews found for this book yet." });
+      }
+
+      return res.json(reviews);
+    } catch (err) {
+      next(err);
+    }
+  },
+  async getReviewsByUser(req, res, next) {
+    try {
+      const { limit, offset } = getPagination(req.query);
+      const { id } = req.params;
+
+      const reviews = await Book_review.findAll({
+        where: { user_id: id },
+        limit,
+        offset,
+        order: [['createdAt', 'DESC']],
+        include: [
+          {
+            model: Book,
+            as: "book",
+            attributes: ["title", "subtitle", "pages", "publication_year", "author_id", "publisher_id", "category_id", "genre_id", "cover"],
+            include: [
+              {
+                model: Author,
+                as: "author",
+                attributes: ["name"],
+              },
+              {
+                model: Publisher,
+                as: "publisher",
+                attributes: ["name"],
+              },
+              {
+                model: Genre,
+                as: "genre",
+                attributes: ["name"],
+              },
+              {
+                model: Category,
+                as: "category",
+                attributes: ["name"],
+              },
+            ],
+          }
+        ],
+      });
+
+      if (!reviews || reviews.length === 0) {
+        return res.status(404).json({ message: "No reviews found for this user yet." });
+      }
+
+      return res.json(reviews);
+    } catch (err) {
+      next(err);
+    }
+  },
   async getMostReviewed(req, res, next) {
     try {
       const { limit, offset } = getPagination(req.query);

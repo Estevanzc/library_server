@@ -24,9 +24,13 @@ router.put('/update', authMiddleware, adminMiddleware, updateMiddleware, bookCon
 router.put('/update/cover', authMiddleware, adminMiddleware, bookController.updateCover);
 router.delete('/destroy', authMiddleware, adminMiddleware, bookController.destroy);
 
+router.get('/ratings/user/:id', bookRatingController.getRatingsByUser);
+router.get('/ratings/book/:id', bookRatingController.getRatingsByBook);
 router.post('/rating/store', authMiddleware, bookRatingController.store);
 router.put('/rating/update', authMiddleware, bookRatingController.update);
 
+router.get('/reviews/user/:id', bookReviewController.getReviewsByUser);
+router.get('/reviews/book/:id', bookReviewController.getReviewsByBook);
 router.post('/review/store', authMiddleware, bookReviewController.store);
 router.put('/review/update', authMiddleware, bookReviewController.update);
 router.delete('/review/destroy/:id', authMiddleware, bookReviewController.destroy);
@@ -34,6 +38,7 @@ router.delete('/review/destroy/:id', authMiddleware, bookReviewController.destro
 router.post('/preferences/store', authMiddleware, preferenceController.store);
 router.delete('/preferences/destroy/:id', authMiddleware, preferenceController.destroy);
 
+router.get('/favorites/:id', authMiddleware, favoriteController.getFavoritesByUser);
 router.post('/favorites/store', authMiddleware, favoriteController.store);
 router.delete('/favorites/destroy/:id', authMiddleware, favoriteController.destroy);
 

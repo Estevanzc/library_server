@@ -15,10 +15,84 @@ const { Op } = require("sequelize")
 const { getPagination, getMonthWindow } = require('../utils/queryHelper');
 
 module.exports = {
-  /*
-  by book
-  by user
-  */
+  async getRatingsByBook(req, res, next) {
+    try {
+      const { limit, offset } = getPagination(req.query);
+      const { id } = req.params;
+
+      const ratings = await Book_rating.findAll({
+        where: { book_id: id },
+        limit,
+        offset,
+        order: [['createdAt', 'DESC']],
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name", "email", "photo"],
+          }
+        ],
+      });
+
+      if (!ratings || ratings.length === 0) {
+        return res.status(404).json({ message: "No ratings found for this book yet." });
+      }
+
+      return res.json(ratings);
+    } catch (err) {
+      next(err);
+    }
+  },
+  async getRatingsByUser(req, res, next) {
+    try {
+      const { limit, offset } = getPagination(req.query);
+      const { id } = req.params;
+
+      const ratings = await Book_rating.findAll({
+        where: { user_id: id },
+        limit,
+        offset,
+        order: [['createdAt', 'DESC']],
+        include: [
+          {
+            model: Book,
+            as: "book",
+            attributes: ["title", "subtitle", "pages", "publication_year", "author_id", "publisher_id", "category_id", "genre_id", "cover"],
+            include: [
+              {
+                model: Author,
+                as: "author",
+                attributes: ["name"],
+              },
+              {
+                model: Publisher,
+                as: "publisher",
+                attributes: ["name"],
+              },
+              {
+                model: Genre,
+                as: "genre",
+                attributes: ["name"],
+              },
+              {
+                model: Category,
+                as: "category",
+                attributes: ["name"],
+              },
+            ],
+          }
+        ],
+      });
+
+      if (!ratings || ratings.length === 0) {
+        return res.status(404).json({ message: "No ratings found for this user yet." });
+      }
+
+      return res.json(ratings);
+    } catch (err) {
+      next(err);
+    }
+  },
   async getBestRated(req, res, next) {
     try {
       const { limit, offset } = getPagination(req.query);
@@ -26,7 +100,6 @@ module.exports = {
       const bestRated = await Book_rating.findAll({
         attributes: [
           'book_id',
-          // Use AVG instead of COUNT for ratings
           [sequelize.fn('AVG', sequelize.col('rating')), 'averageRating']
         ],
         where: { createdAt: { [Op.gte]: getMonthWindow() } },
@@ -39,7 +112,6 @@ module.exports = {
 
       const results = bestRated.map(r => ({
         ...r.book.toJSON(),
-        // Parse float to ensure the average looks clean (e.g., 4.5)
         averageRating: parseFloat(r.dataValues.averageRating).toFixed(1)
       }));
 

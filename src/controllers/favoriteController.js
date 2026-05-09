@@ -15,9 +15,30 @@ const { Op } = require("sequelize")
 const { getPagination, getMonthWindow } = require('../utils/queryHelper');
 
 module.exports = {
-  /*
-  by user
-  */
+  async getFavoritesByUser(req, res, next) {
+    try {
+      const { limit, offset } = getPagination(req.query);
+      const { id } = req.params;
+      if (id != req.user.id) {
+        return res.status(403).json({error: "Access denied"})
+      }
+
+      const favorites = await Favorite.findAll({
+        where: { user_id: id },
+        limit,
+        offset,
+        order: [['createdAt', 'DESC']],
+      });
+
+      if (!favorites || favorites.length === 0) {
+        return res.status(404).json({ message: "No books found in the wish list for this user yet." });
+      }
+
+      return res.json(favorites);
+    } catch (err) {
+      next(err);
+    }
+  },
   async store(req, res, next) {
     try {
       let { book_id } = req.body

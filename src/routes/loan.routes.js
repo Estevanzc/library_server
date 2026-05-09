@@ -8,6 +8,8 @@ const { loanController } = require('../controllers/');
 
 const router = express.Router();
 
+router.get('/', authMiddleware, adminMiddleware, loanController.index);
+router.get('/user/:id', authMiddleware, loanController.getLoansByUser);
 router.post('/store', authMiddleware, adminMiddleware, insertMiddleware, loanController.store);
 router.put('/update/renew', authMiddleware, loanController.renew);
 router.put('/update/return', authMiddleware, adminMiddleware, loanController.book_return);

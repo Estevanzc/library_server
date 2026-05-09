@@ -51,7 +51,12 @@ module.exports = {
                 attributes: ["name"],
               },
             ],
-          }
+          },
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name", "email", "photo"],
+          },
         ],
       });
 

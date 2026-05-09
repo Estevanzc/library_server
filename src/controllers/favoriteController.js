@@ -20,7 +20,7 @@ module.exports = {
       const { limit, offset } = getPagination(req.query);
       const { id } = req.params;
       if (id != req.user.id) {
-        return res.status(403).json({error: "Access denied"})
+        return res.status(403).json({ error: "Access denied" })
       }
 
       const favorites = await Favorite.findAll({
@@ -28,6 +28,35 @@ module.exports = {
         limit,
         offset,
         order: [['createdAt', 'DESC']],
+        include: [
+          {
+            model: Book,
+            as: "book",
+            attributes: ["title", "subtitle", "pages", "publication_year", "author_id", "publisher_id", "category_id", "genre_id", "cover"],
+            include: [
+              {
+                model: Author,
+                as: "author",
+                attributes: ["name"],
+              },
+              {
+                model: Publisher,
+                as: "publisher",
+                attributes: ["name"],
+              },
+              {
+                model: Genre,
+                as: "genre",
+                attributes: ["name"],
+              },
+              {
+                model: Category,
+                as: "category",
+                attributes: ["name"],
+              },
+            ],
+          }
+        ],
       });
 
       if (!favorites || favorites.length === 0) {

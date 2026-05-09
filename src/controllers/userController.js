@@ -1,4 +1,4 @@
-const { Author, Book_rating, Book_review, Book_view, Book, Category, Favorite, Genre, Leanguage, Loan, Preference, Publisher, User } = require('../../models');
+const { Author, Book_rating, Book_review, Book_view, Book, Category, Favorite, Genre, Leanguage, Loan, Preference, Publisher, User, sequelize } = require('../../models');
 const bcrypt = require('bcryptjs');
 const { Sequelize, where } = require('sequelize');
 const jwt = require('jsonwebtoken');
@@ -13,6 +13,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 // const { emailPage } = require('../utils/emailPage');
 const { Op } = require("sequelize")
+const { getPagination, getMonthWindow } = require('../utils/queryHelper');
 
 module.exports = {
   async profile(req, res, next) {

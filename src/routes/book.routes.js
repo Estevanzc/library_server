@@ -5,10 +5,20 @@ const insertMiddleware = require('../middlewares/data_validation/books/insertMid
 const updateMiddleware = require('../middlewares/data_validation/books/updateMiddleware');
 const optionalAuthMiddleware = require('../middlewares/optionalAuthMiddleware');
 const upload = require('../middlewares/upload');
-const {bookController, bookReviewController, bookRatingController, preferenceController, favoriteController} = require('../controllers/');
+const {bookController, bookReviewController, bookRatingController, preferenceController, favoriteController, loanController} = require('../controllers/');
 
 const router = express.Router();
 
+router.get('/view', optionalAuthMiddleware, bookController.view);
+router.get('/ranking/view', authMiddleware, bookController.getMostViewed);
+router.get('/ranking/review', bookReviewController.getMostReviewed);
+router.get('/ranking/rating', bookRatingController.getBestRated);
+router.get('/ranking/loan', loanController.getMostLoaned);
+router.get('/publisher/:id', bookController.getByPublisher);
+router.get('/author/:id', bookController.getByAuthor);
+router.get('/genre/:id', bookController.getByGenre);
+router.get('/category/:id', bookController.getByCategory);
+router.get('/preference', authMiddleware, preferenceController.getByPreference);
 router.post('/store', authMiddleware, adminMiddleware, insertMiddleware, bookController.store);
 router.put('/update', authMiddleware, adminMiddleware, updateMiddleware, bookController.update);
 router.put('/update/cover', authMiddleware, adminMiddleware, bookController.updateCover);

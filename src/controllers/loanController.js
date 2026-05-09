@@ -1,4 +1,4 @@
-const { Author, Book_rating, Book_review, Book_view, Book, Category, Favorite, Genre, Leanguage, Loan, Preference, Publisher, User } = require('../../models');
+const { Author, Book_rating, Book_review, Book_view, Book, Category, Favorite, Genre, Leanguage, Loan, Preference, Publisher, User, sequelize } = require('../../models');
 const bcrypt = require('bcryptjs');
 const dayjs = require('dayjs');
 const { Sequelize, where } = require('sequelize');
@@ -13,8 +13,38 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { Op } = require("sequelize")
+const { getPagination, getMonthWindow } = require('../utils/queryHelper');
 
 module.exports = {
+  /*
+  all
+  by user
+  */
+  async getMostLoaned(req, res, next) {
+    try {
+      const { limit, offset } = getPagination(req.query);
+
+      const topLoans = await Loan.findAll({
+        attributes: [
+          'book_id',
+          [sequelize.fn('COUNT', sequelize.col('book_id')), 'monthlyLoans']
+        ],
+        where: { createdAt: { [Op.gte]: getMonthWindow() } },
+        group: ['book_id'],
+        order: [[sequelize.literal('monthlyLoans'), 'DESC']],
+        limit,
+        offset,
+        include: [{ model: Book, as: 'book', attributes: ['id', 'title'] }]
+      });
+
+      const results = topLoans.map(l => ({
+        ...l.book.toJSON(),
+        monthlyLoans: l.dataValues.monthlyLoans
+      }));
+
+      return res.json(results);
+    } catch (err) { next(err); }
+  },
   async store(req, res, next) {
     try {
       let { user_id, book_id } = req.body

@@ -15,9 +15,69 @@ const { Op } = require("sequelize")
 const { getPagination, getMonthWindow } = require('../utils/queryHelper');
 
 module.exports = {
-  /*
-  search
-  */
+  async search(req, res, next) {
+    try {
+      const { limit, offset } = getPagination(req.query);
+
+      const {
+        q, fields, minPages, pubYear,
+        authorName, publisherName, categoryName, genreName, languageName,
+        isAvailable
+      } = req.query;
+
+      const bookWhere = {};
+
+      if (q && fields) {
+        const searchTargets = fields === 'all'
+          ? ['title', 'subtitle', 'sinopsis', 'isbn']
+          : fields.split(',');
+
+        bookWhere[Op.or] = searchTargets.map(field => ({
+          [field]: { [Op.like]: `%${q}%` }
+        }));
+      }
+
+      if (minPages) bookWhere.pages = { [Op.gte]: parseInt(minPages, 10) };
+      if (pubYear) bookWhere.publication_year = parseInt(pubYear, 10);
+
+      if (isAvailable !== undefined) {
+        if (!bookWhere[Op.and]) bookWhere[Op.and] = [];
+
+        const operator = isAvailable === 'true' ? '>' : '<=';
+
+        const availabilityQuery = sequelize.literal(`
+                Book.inventory ${operator} (
+                    SELECT COUNT(*) 
+                    FROM Loans AS loan 
+                    WHERE loan.book_id = Book.id AND loan.active = true
+                )
+            `);
+
+        bookWhere[Op.and].push(availabilityQuery);
+      }
+
+      const includeAuthor = { model: Author, as: 'author', attributes: ['id', 'name'] };
+      if (authorName) includeAuthor.where = { name: { [Op.like]: `%${authorName}%` } };
+
+      const books = await Book.findAll({
+        where: bookWhere,
+        limit,
+        offset,
+        include: [
+          includeAuthor,
+        ],
+        order: [['createdAt', 'DESC']]
+      });
+
+      if (!books.length) {
+        return res.status(404).json({ message: "No books matched your search criteria." });
+      }
+
+      return res.json(books);
+    } catch (err) {
+      next(err);
+    }
+  },
   async view(req, res, next) {
     try {
       const { id } = req.query;
@@ -82,7 +142,7 @@ module.exports = {
         return res.status(404).json({ error: "Book not found" });
       }
 
-      await Book_view.create({ book_id: id, user_id: req.user.id });/////
+      await Book_view.create({ book_id: id, user_id: (req.user ? req.user.id : null) });
 
       return res.json(book);
 

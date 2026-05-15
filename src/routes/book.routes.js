@@ -10,6 +10,7 @@ const {bookController, bookReviewController, bookRatingController, preferenceCon
 const router = express.Router();
 
 router.get('/view', optionalAuthMiddleware, bookController.view);
+router.get('/search', optionalAuthMiddleware, bookController.search);
 router.get('/ranking/view', authMiddleware, bookController.getMostViewed);
 router.get('/ranking/review', bookReviewController.getMostReviewed);
 router.get('/ranking/rating', bookRatingController.getBestRated);

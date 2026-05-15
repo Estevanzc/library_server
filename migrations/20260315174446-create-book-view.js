@@ -11,13 +11,13 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "Users",
           key: "id",
         },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
+        onUpdate: "SET NULL",
       },
       book_id: {
         type: Sequelize.INTEGER,
